@@ -74,9 +74,7 @@ ax.plot([0, 1, 2], [means[0], means[1], means[2]], color=(.85, 0, 0), marker='s'
 sns.despine(offset=10, trim=True)
 ax.set_xlabel("Target Location")
 ax.set_ylabel("Response Time [ms]")
-fig1.savefig(analysisFolder+'figure1.svg', bbox_inches='tight')
 plt.show()
-plt.clf()
 
 ### Figure 2
 dataTarLocGrad = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0)],
@@ -99,9 +97,7 @@ ax.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], c
         markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
 sns.despine(offset=10, trim=True)
 #sns.set_context('paper')
-fig2.savefig(analysisFolder+'figure2.svg', bbox_inches='tight')
 plt.show()
-plt.clf()
 
 ### Figure 3
 dataDisLoc = pd.pivot_table(data[(data.cond_disPresent == 'present') & (data.RTquicker200 == 0) & (data.correct == 1)],
@@ -121,9 +117,7 @@ sns.swarmplot(x="probabilityCorrection_short", y="responseTime", data=dataDisLoc
 ax.plot(range(len(means)), [means[0], means[1], means[2]], color=(.85, 0, 0), marker='s', markersize=7,
         markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
 sns.despine(offset=10, trim=True)
-fig3.savefig(analysisFolder+'figure3.svg', bbox_inches='tight')
 plt.show()
-plt.clf()
 
 ### Figure 4
 dataDisLocGrad = pd.pivot_table(data[(data.cond_disPresent == 'present') & (data.RTquicker200 == 0) & (data.correct == 1)],
@@ -144,6 +138,10 @@ sns.swarmplot(x="DisDistance", y="responseTime", data=dataDisLocGrad, color=swaC
 ax.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], color=(.85, 0, 0), marker='s', markersize=7,
         markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
 sns.despine(offset=10, trim=True)
-fig4.savefig(analysisFolder+'figure4.svg', bbox_inches='tight')
 plt.show()
-plt.clf()
+
+# Save
+fig1.savefig(analysisFolder+'figure1.svg', bbox_inches='tight')
+fig2.savefig(analysisFolder+'figure2.svg', bbox_inches='tight')
+fig3.savefig(analysisFolder+'figure3.svg', bbox_inches='tight')
+fig4.savefig(analysisFolder+'figure4.svg', bbox_inches='tight')
