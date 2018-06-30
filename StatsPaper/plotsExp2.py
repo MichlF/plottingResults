@@ -7,13 +7,13 @@ import platform
 # Set paths and load experiment 1 data
 # Get Dropbox path irrespective of OS
 if platform.system() == "Windows":
-    projectFolder = '/Users/michlf/Dropbox/Work/Data/behavioral/attention/SpatialProb/IndividualPriorityMaps/Experiment4'
+    projectFolder = '/Users/michlf/Dropbox/Work/Data/behavioral/attention/SpatialProb/IndividualPriorityMaps/Experiment2'
 else:
-    projectFolder = '/Users/michlf/Dropbox/Work/Data/behavioral/attention/SpatialProb/IndividualPriorityMaps/Experiment4'
+    projectFolder = '/Users/michlf/Dropbox/Work/Data/behavioral/attention/SpatialProb/IndividualPriorityMaps/Experiment2'
 analysisFolder = projectFolder+'/figures/'
 if not os.path.exists(analysisFolder):
     os.makedirs(analysisFolder)
-dataFile = '/Data/finalAnalysis/SpatProbExp1_final.xlsx'
+dataFile = '/Data/finalAnalysis/SpatProbExp2_final.xlsx'
 data = pd.read_excel(projectFolder+dataFile, sheet_name=0)
 
 # Styles & color paletts
@@ -36,7 +36,7 @@ swaAlp = .5
 #7f7f7f dark gray
 #bcbd22 dirty yellow
 #17becf cyan
-pTarLoc = {"lowProb": "#1f77b4", "highProbColor1": "#2ca02c", "highProbColor2": "#d62728"}
+pTarLoc = {"lowProb": "#1f77b4", "highProbColor": "#2ca02c", "highProbShape": "#d62728"}
 #palettTarLoc = {cond_tarLocation: "r" if cond_tarLocation == "lowProb" else "b" for cond_tarLocation in dataM.cond_tarLocation.unique()}
 pTarLocGrad = {"Dis-0": "#1f77b4", "Dis-1": "#2ca02c", "Dis-2": "#d62728", "Dis-3": "#d62728", "Dis-4": "#d62728"}
 pDisLoc = {"lowProb": "#1f77b4", "highProb": "#2ca02c", "highProbOther": "#d62728"}
@@ -45,14 +45,14 @@ pDisLocGrad = {"Dis-0": "#1f77b4", "Dis-1": "#2ca02c", "Dis-2": "#d62728", "Dis-
 ### Figure 1
 
 # Data selection
-dataTarLoc = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0) & (data.correct == 1)],
+dataTarLoc = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0)],
                             values='responseTime', index='subject_nr', columns='cond_tarLocation')
 # dataDisLoc = pd.melt(dataDisLoc)  #if columns is a list (i.e. for e.g. 2 x 2 ANOVAs)
 dataTarLoc = pd.melt(
     dataTarLoc.reset_index(),
     id_vars='subject_nr',
     var_name='cond_tarLocation',
-    value_vars=['highProbColor1', 'highProbColor2', 'lowProb'],
+    value_vars=['highProbColor', 'highProbShape', 'lowProb'],
     value_name='responseTime')
 
 # Descriptives
@@ -79,22 +79,22 @@ plt.show()
 plt.clf()
 
 ### Figure 2
-dataTarLocGrad = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0) & (data.correct == 1)],
-                                values='responseTime', index='subject_nr', columns='TarDistanceFromColor1')
+dataTarLocGrad = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0)],
+                                values='responseTime', index='subject_nr', columns='TarDistanceFromColor')
 dataTarLocGrad = pd.melt(
     dataTarLocGrad.reset_index(),
     id_vars='subject_nr',
-    var_name='TarDistanceFromColor1',
+    var_name='TarDistanceFromColor',
     value_vars=['Dis-0', 'Dis-1', 'Dis-2', 'Dis-3', 'Dis-4'],
     value_name='responseTime')
 
 # Descriptives
-means = dataTarLocGrad.groupby(['TarDistanceFromColor1'])['responseTime'].mean().values
+means = dataTarLocGrad.groupby(['TarDistanceFromColor'])['responseTime'].mean().values
 
 # Plotting
 fig2, (ax) = plt.subplots(1, 1, figsize=(6, 6), dpi=100)
-sns.violinplot(x='TarDistanceFromColor1', y='responseTime', data=dataTarLocGrad, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLocGrad)
-sns.swarmplot(x="TarDistanceFromColor1", y="responseTime", data=dataTarLocGrad, color=swaCol, alpha=swaAlp)
+sns.violinplot(x='TarDistanceFromColor', y='responseTime', data=dataTarLocGrad, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLocGrad)
+sns.swarmplot(x="TarDistanceFromColor", y="responseTime", data=dataTarLocGrad, color=swaCol, alpha=swaAlp)
 ax.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], color=(.85, 0, 0), marker='s', markersize=7,
         markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
 sns.despine(offset=10, trim=True)
@@ -105,19 +105,19 @@ plt.clf()
 
 ### Figure 3
 dataDisLoc = pd.pivot_table(data[(data.cond_disPresent == 'present') & (data.RTquicker200 == 0) & (data.correct == 1)],
-                                values='responseTime', index='subject_nr', columns=['cond_disLocation'])
+                                values='responseTime', index='subject_nr', columns=['probabilityCorrection_short'])
 dataDisLoc = pd.melt(
     dataDisLoc.reset_index(),
     id_vars='subject_nr',
-    var_name='cond_disLocation',
+    var_name='probabilityCorrection_short',
     value_vars=['highProb', 'highProbOther', 'lowProb'],
     value_name='responseTime')
 # Descriptives
-means = dataDisLoc.groupby(['cond_disLocation'])['responseTime'].mean().values
+means = dataDisLoc.groupby(['probabilityCorrection_short'])['responseTime'].mean().values
 # Plotting
 fig3, (ax) = plt.subplots(1, 1, figsize=(4, 6), dpi=100)
-sns.violinplot(x='cond_disLocation', y='responseTime', data=dataDisLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pDisLoc)
-sns.swarmplot(x="cond_disLocation", y="responseTime", data=dataDisLoc, color=swaCol, alpha=swaAlp)
+sns.violinplot(x='probabilityCorrection_short', y='responseTime', data=dataDisLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pDisLoc)
+sns.swarmplot(x="probabilityCorrection_short", y="responseTime", data=dataDisLoc, color=swaCol, alpha=swaAlp)
 ax.plot(range(len(means)), [means[0], means[1], means[2]], color=(.85, 0, 0), marker='s', markersize=7,
         markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
 sns.despine(offset=10, trim=True)
