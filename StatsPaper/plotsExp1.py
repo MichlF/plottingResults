@@ -1,4 +1,3 @@
-# Import modules
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -7,7 +6,6 @@ import platform
 
 # Set paths and load experiment 1 data
 # Get Dropbox path irrespective of OS
-print(platform.system())
 if platform.system() == "Windows":
     projectFolder = '/Users/michlf/Dropbox/Work/Data/behavioral/attention/SpatialProb/IndividualPriorityMaps/Experiment2'
 else:
@@ -26,8 +24,6 @@ vioSat = .25
 vioCut = 0
 swaCol = (1, 1, 1)
 swaAlp = .5
-#meanlineprops = dict(linestyle='--', linewidth=2.5, color='red')
-
 # Color palletts
 # Standard matplotlib colors
 #1f77b4 blue
@@ -76,21 +72,11 @@ ax.plot([0, 1, 2], [means[0], means[1], means[2]], color=(.85, 0, 0), marker='s'
 #for tick, label in zip(pos, ax.get_xticklabels()):
     #ax.plot([pos[tick]-0.1, pos[tick]+0.1], [means[tick], means[tick]], color='red', alpha=.75, linewidth=3)  #linestyle='dashed', dashes=(0.75, 0.75))
 sns.despine(offset=10, trim=True)
-#sns.set_context('paper')
 ax.set_xlabel("Target Location")
 ax.set_ylabel("Response Time [ms]")
 fig1.savefig(analysisFolder+'figure1.svg', bbox_inches='tight')
 plt.show()
 plt.clf()
-# # Horizontally
-# sns.violinplot(y='cond_tarLocation', x='responseTime', data=dataTarLoc, cut=1.5)
-# #sns.swarmplot(y="cond_tarLocation", x="accuracy", data=dataTarLoc, color="w", alpha=.40
-# plt.show()
-# # Boxplot
-# sns.boxplot(x='cond_tarLocation', y='responseTime', data=dataTarLoc, orient='v', showmeans=True, meanprops=meanlineprops,
-#             meanline=True, notch=False)
-# sns.swarmplot(x="cond_tarLocation", y="responseTime", data=dataTarLoc, color="black", alpha=.4)
-# plt.show()
 
 ### Figure 2
 dataTarLocGrad = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0)],
@@ -128,7 +114,6 @@ dataDisLoc = pd.melt(
     value_name='responseTime')
 # Descriptives
 means = dataDisLoc.groupby(['probabilityCorrection_short'])['responseTime'].mean().values
-
 # Plotting
 fig3, (ax) = plt.subplots(1, 1, figsize=(4, 6), dpi=100)
 sns.violinplot(x='probabilityCorrection_short', y='responseTime', data=dataDisLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pDisLoc)
@@ -136,7 +121,6 @@ sns.swarmplot(x="probabilityCorrection_short", y="responseTime", data=dataDisLoc
 ax.plot(range(len(means)), [means[0], means[1], means[2]], color=(.85, 0, 0), marker='s', markersize=7,
         markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
 sns.despine(offset=10, trim=True)
-#sns.set_context('paper')
 fig3.savefig(analysisFolder+'figure3.svg', bbox_inches='tight')
 plt.show()
 plt.clf()
@@ -160,7 +144,6 @@ sns.swarmplot(x="DisDistance", y="responseTime", data=dataDisLocGrad, color=swaC
 ax.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], color=(.85, 0, 0), marker='s', markersize=7,
         markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
 sns.despine(offset=10, trim=True)
-#sns.set_context('paper')
 fig4.savefig(analysisFolder+'figure4.svg', bbox_inches='tight')
 plt.show()
 plt.clf()
