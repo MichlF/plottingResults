@@ -47,6 +47,8 @@ pDisLocGrad = {"Dis-0": "#1f77b4", "Dis-1": "#2ca02c", "Dis-2": "#d62728", "Dis-
 # Data selection
 dataTarLoc = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0)],
                             values='responseTime', index='subject_nr', columns='cond_tarLocation')
+dataTarLocAcc = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0)],
+                            values='accuracy', index='subject_nr', columns='cond_tarLocation')
 # dataDisLoc = pd.melt(dataDisLoc)  #if columns is a list (i.e. for e.g. 2 x 2 ANOVAs)
 dataTarLoc = pd.melt(
     dataTarLoc.reset_index(),
@@ -96,7 +98,6 @@ sns.swarmplot(x="TarDistanceFromColor", y="responseTime", data=dataTarLocGrad, c
 ax.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], color=(.85, 0, 0), marker='s', markersize=7,
         markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
 sns.despine(offset=10, trim=True)
-#sns.set_context('paper')
 plt.show()
 
 ### Figure 3

@@ -3,6 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import os
 import platform
+import numpy as np
 
 # Set paths and load experiment 1 data
 # Get Dropbox path irrespective of OS
@@ -62,26 +63,28 @@ means = dataTarLoc.groupby(['cond_tarLocation'])['responseTime'].mean().values
 
 # Plotting
 #fig1, (ax) = plt.subplots(1, 1, figsize=(4, 6), dpi=100)
-fig1 = plt.figure(facecolor='#f0f0f0')
-ax1 = plt.subplot2grid((6,1), (0,0), rowspan=1, colspan=1)
-sns.violinplot(x='cond_tarLocation', y='responseTime', data=dataTarLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLoc)
-ax1.yaxis.set_label_position("right")
-h = plt.ylabel('Error rate')
-h.set_rotation(270)
-ax2 = plt.subplot2grid((6,1), (1,0), rowspan=4, colspan=1, sharex=ax1)
+fig1 = plt.figure()
+
+ax1 = plt.subplot2grid((4,3), (1,0), rowspan=3, colspan=3)
 sns.violinplot(x='cond_tarLocation', y='responseTime', data=dataTarLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLoc)
 sns.swarmplot(x="cond_tarLocation", y="responseTime", data=dataTarLoc, color=swaCol, alpha=swaAlp)
-plt.ylabel('Price')
 ax1.plot([0, 1, 2], [means[0], means[1], means[2]], color=(.85, 0, 0), marker='s', markersize=7,
         markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
+ax1.set_xlabel("Target Location")
+ax1.set_ylabel("Response Time [ms]")
 #ax2 = plt.axes([0, 0, 1, 0.1])
 #ax2 = sns.violinplot(x='cond_tarLocation', y='responseTime', data=dataTarLoc, cut=0, saturation=.2, palette=pTarLoc)
 # Each condition in violin plot corresponds to 1 px, so use floats because scaling is all messed up.
 #for tick, label in zip(pos, ax.get_xticklabels()):
     #ax.plot([pos[tick]-0.1, pos[tick]+0.1], [means[tick], means[tick]], color='red', alpha=.75, linewidth=3)  #linestyle='dashed', dashes=(0.75, 0.75))
+ax2 = plt.subplot2grid((4,3), (3,0), colspan=3)
+values = np.cumsum(np.random.randn(1000, 1))
+#plt.plot(values)
+sns.violinplot(x='cond_tarLocation', y='responseTime', data=dataTarLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLoc)
+ax2.yaxis.set_label_position("right")
+h = plt.ylabel('Error Rate')
+h.set_rotation(270)
 sns.despine(offset=10, trim=True)
-ax1.set_xlabel("Target Location")
-ax1.set_ylabel("Response Time [ms]")
 plt.show()
 
 ### Figure 2
@@ -104,9 +107,7 @@ sns.swarmplot(x="TarDistanceFromColor1", y="responseTime", data=dataTarLocGrad, 
 ax.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], color=(.85, 0, 0), marker='s', markersize=7,
         markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
 sns.despine(offset=10, trim=True)
-#sns.set_context('paper')
 plt.show()
-plt.clf()
 
 ### Figure 3
 dataDisLoc = pd.pivot_table(data[(data.cond_disPresent == 'present') & (data.RTquicker200 == 0) & (data.correct == 1)],
