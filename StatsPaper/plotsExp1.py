@@ -63,27 +63,33 @@ means = dataTarLoc.groupby(['cond_tarLocation'])['responseTime'].mean().values
 
 # Plotting
 #fig1, (ax) = plt.subplots(1, 1, figsize=(4, 6), dpi=100)
-fig1 = plt.figure()
+fig1 = plt.figure(figsize=(4, 6), dpi=100)
 
-ax1 = plt.subplot2grid((4,3), (1,0), rowspan=3, colspan=3)
+ax1 = plt.subplot2grid((6,1), (0,0), rowspan=5, colspan=1)
 sns.violinplot(x='cond_tarLocation', y='responseTime', data=dataTarLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLoc)
 sns.swarmplot(x="cond_tarLocation", y="responseTime", data=dataTarLoc, color=swaCol, alpha=swaAlp)
 ax1.plot([0, 1, 2], [means[0], means[1], means[2]], color=(.85, 0, 0), marker='s', markersize=7,
         markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
-ax1.set_xlabel("Target Location")
+#ax1.set_xlabel("Target Location")
+ax1.set_xlabel('')
 ax1.set_ylabel("Response Time [ms]")
+#ax1.axes.get_xaxis().set_ticks([])
+ax1.axes.get_xaxis().set_visible(False)
 #ax2 = plt.axes([0, 0, 1, 0.1])
 #ax2 = sns.violinplot(x='cond_tarLocation', y='responseTime', data=dataTarLoc, cut=0, saturation=.2, palette=pTarLoc)
 # Each condition in violin plot corresponds to 1 px, so use floats because scaling is all messed up.
 #for tick, label in zip(pos, ax.get_xticklabels()):
     #ax.plot([pos[tick]-0.1, pos[tick]+0.1], [means[tick], means[tick]], color='red', alpha=.75, linewidth=3)  #linestyle='dashed', dashes=(0.75, 0.75))
-ax2 = plt.subplot2grid((4,3), (3,0), colspan=3)
+ax2 = plt.subplot2grid((6,1), (5,0), rowspan=1, colspan=1)
 values = np.cumsum(np.random.randn(1000, 1))
-#plt.plot(values)
-sns.violinplot(x='cond_tarLocation', y='responseTime', data=dataTarLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLoc)
-ax2.yaxis.set_label_position("right")
+plt.plot(values)
+ax2.set_xlabel("Target Location")
+ax2.yaxis.tick_left()
+plt.rcParams['ytick.right'] = plt.rcParams['ytick.labelright'] = True
+plt.rcParams['ytick.left'] = plt.rcParams['ytick.labelleft'] = False
+#ax2.yaxis.set_label_position("right")
 h = plt.ylabel('Error Rate')
-h.set_rotation(270)
+#h.set_rotation(270)
 sns.despine(offset=10, trim=True)
 plt.show()
 
