@@ -26,7 +26,7 @@ vioSat = .25
 vioCut = 0
 swaCol = (1, 1, 1)
 swaAlp = .5
-meanlineprops = dict(linestyle='--', linewidth=2.5, color='red')
+#meanlineprops = dict(linestyle='--', linewidth=2.5, color='red')
 
 # Color palletts
 # Standard matplotlib colors
@@ -69,7 +69,7 @@ fig1, (ax) = plt.subplots(1, 1, figsize=(4, 6), dpi=100)
 sns.violinplot(x='cond_tarLocation', y='responseTime', data=dataTarLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLoc)
 sns.swarmplot(x="cond_tarLocation", y="responseTime", data=dataTarLoc, color=swaCol, alpha=swaAlp)
 ax.plot([0, 1, 2], [means[0], means[1], means[2]], color=(.85, 0, 0), marker='s', markersize=7,
-        markeredgecolor=(0, 0, 0), linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
+        markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
 #ax2 = plt.axes([0, 0, 1, 0.1])
 #ax2 = sns.violinplot(x='cond_tarLocation', y='responseTime', data=dataTarLoc, cut=0, saturation=.2, palette=pTarLoc)
 # Each condition in violin plot corresponds to 1 px, so use floats because scaling is all messed up.
@@ -110,7 +110,7 @@ fig2, (ax) = plt.subplots(1, 1, figsize=(6, 6), dpi=100)
 sns.violinplot(x='TarDistanceFromColor', y='responseTime', data=dataTarLocGrad, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLocGrad)
 sns.swarmplot(x="TarDistanceFromColor", y="responseTime", data=dataTarLocGrad, color=swaCol, alpha=swaAlp)
 ax.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], color=(.85, 0, 0), marker='s', markersize=7,
-        markeredgecolor=(0, 0, 0), linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
+        markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
 sns.despine(offset=10, trim=True)
 #sns.set_context('paper')
 fig2.savefig(analysisFolder+'figure2.svg', bbox_inches='tight')
@@ -134,7 +134,7 @@ fig3, (ax) = plt.subplots(1, 1, figsize=(4, 6), dpi=100)
 sns.violinplot(x='probabilityCorrection_short', y='responseTime', data=dataDisLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pDisLoc)
 sns.swarmplot(x="probabilityCorrection_short", y="responseTime", data=dataDisLoc, color=swaCol, alpha=swaAlp)
 ax.plot(range(len(means)), [means[0], means[1], means[2]], color=(.85, 0, 0), marker='s', markersize=7,
-        markeredgecolor=(0, 0, 0), linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
+        markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
 sns.despine(offset=10, trim=True)
 #sns.set_context('paper')
 fig3.savefig(analysisFolder+'figure3.svg', bbox_inches='tight')
@@ -158,7 +158,7 @@ fig4, (ax) = plt.subplots(1, 1, figsize=(6, 6), dpi=100)
 sns.violinplot(x='DisDistance', y='responseTime', data=dataDisLocGrad, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pDisLocGrad)
 sns.swarmplot(x="DisDistance", y="responseTime", data=dataDisLocGrad, color=swaCol, alpha=swaAlp)
 ax.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], color=(.85, 0, 0), marker='s', markersize=7,
-        markeredgecolor=(0, 0, 0), linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
+        markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
 sns.despine(offset=10, trim=True)
 #sns.set_context('paper')
 fig4.savefig(analysisFolder+'figure4.svg', bbox_inches='tight')
