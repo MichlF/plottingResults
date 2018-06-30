@@ -61,10 +61,18 @@ means = dataTarLoc.groupby(['cond_tarLocation'])['responseTime'].mean().values
 #pos = range(len(mobs))
 
 # Plotting
-fig1, (ax) = plt.subplots(1, 1, figsize=(4, 6), dpi=100)
+#fig1, (ax) = plt.subplots(1, 1, figsize=(4, 6), dpi=100)
+fig1 = plt.figure(facecolor='#f0f0f0')
+ax1 = plt.subplot2grid((6,1), (0,0), rowspan=1, colspan=1)
+sns.violinplot(x='cond_tarLocation', y='responseTime', data=dataTarLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLoc)
+ax1.yaxis.set_label_position("right")
+h = plt.ylabel('Error rate')
+h.set_rotation(270)
+ax2 = plt.subplot2grid((6,1), (1,0), rowspan=4, colspan=1, sharex=ax1)
 sns.violinplot(x='cond_tarLocation', y='responseTime', data=dataTarLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLoc)
 sns.swarmplot(x="cond_tarLocation", y="responseTime", data=dataTarLoc, color=swaCol, alpha=swaAlp)
-ax.plot([0, 1, 2], [means[0], means[1], means[2]], color=(.85, 0, 0), marker='s', markersize=7,
+plt.ylabel('Price')
+ax1.plot([0, 1, 2], [means[0], means[1], means[2]], color=(.85, 0, 0), marker='s', markersize=7,
         markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
 #ax2 = plt.axes([0, 0, 1, 0.1])
 #ax2 = sns.violinplot(x='cond_tarLocation', y='responseTime', data=dataTarLoc, cut=0, saturation=.2, palette=pTarLoc)
@@ -72,8 +80,8 @@ ax.plot([0, 1, 2], [means[0], means[1], means[2]], color=(.85, 0, 0), marker='s'
 #for tick, label in zip(pos, ax.get_xticklabels()):
     #ax.plot([pos[tick]-0.1, pos[tick]+0.1], [means[tick], means[tick]], color='red', alpha=.75, linewidth=3)  #linestyle='dashed', dashes=(0.75, 0.75))
 sns.despine(offset=10, trim=True)
-ax.set_xlabel("Target Location")
-ax.set_ylabel("Response Time [ms]")
+ax1.set_xlabel("Target Location")
+ax1.set_ylabel("Response Time [ms]")
 fig1.savefig(analysisFolder+'figure1.svg', bbox_inches='tight')
 plt.show()
 plt.clf()
