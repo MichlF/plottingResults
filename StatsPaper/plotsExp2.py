@@ -22,10 +22,12 @@ data = pd.read_excel(projectFolder+dataFile, sheet_name=0)
 ci = 95  # for SD = sd, for SEM = 68, for standard ci = 95
 # Styles
 vioLw = 3
-vioSat = .25
-vioCut = 0.25
-swaCol = (1, 1, 1)
-swaAlp = .5
+vioSat = .5
+vioCut = 0
+swaCol = (.5, .5, .5)
+swaColE = (0, 0, 0)
+swaLwE = .5
+swaAlp = 1
 lpColor = (.85, 0, 0)
 lpMarker = 's'
 lpMarkerS = 7
@@ -45,11 +47,11 @@ lpLs = '-'
 #7f7f7f dark gray
 #bcbd22 dirty yellow
 #17becf cyan
-pTarLoc = {"lowProb": "#1f77b4", "highProbColor": "#2ca02c", "highProbShape": "#d62728"}
+pTarLoc = {"lowProb": "#ffffff", "highProbColor": "#ff7f0e", "highProbShape": "#1f77b4"}
 #palettTarLoc = {cond_tarLocation: "r" if cond_tarLocation == "lowProb" else "b" for cond_tarLocation in dataM.cond_tarLocation.unique()}
-pTarLocGrad = {"Dis-0": "#1f77b4", "Dis-1": "#2ca02c", "Dis-2": "#d62728", "Dis-3": "#d62728", "Dis-4": "#d62728"}
-pDisLoc = {"lowProb": "#1f77b4", "highProb": "#2ca02c", "highProbOther": "#d62728"}
-pDisLocGrad = {"Dis-0": "#1f77b4", "Dis-1": "#2ca02c", "Dis-2": "#d62728", "Dis-3": "#d62728", "Dis-4": "#d62728"}
+pTarLocGrad = {"Dis-0": "#ff7f0e", "Dis-1": "#ffc999", "Dis-2": "#ffffff", "Dis-3": "#92c7ed", "Dis-4": "#1f77b4"}
+pDisLoc = {"lowProb": "#ffffff", "highProb": "#2ca02c", "highProbOther": "#d62728"}
+pDisLocGrad = {"Dis-0": "#d62728", "Dis-1": "#eb9393", "Dis-2": "#ffffff", "Dis-3": "#9be49b", "Dis-4": "#2ca02c"}
 
 ### Figure 1 ###
 
@@ -82,9 +84,9 @@ dataTarLocER.accuracy = (1-dataTarLocER.accuracy)*100  # make accuracy error rat
 fig1 = plt.figure(figsize=(3.25, 6), dpi=100)
 ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan=5, colspan=1)
 sns.violinplot(x='cond_tarLocation', y='responseTime', data=dataTarLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLoc)
-sns.swarmplot(x="cond_tarLocation", y="responseTime", data=dataTarLoc, color=swaCol, alpha=swaAlp)
+sns.swarmplot(x="cond_tarLocation", y="responseTime", data=dataTarLoc, color=swaCol, alpha=swaAlp, linewidth=swaLwE, edgecolor=swaColE)
 ax1.plot(range(len(means)), [means[0], means[1], means[2]], color=lpColor, marker=lpMarker, markersize=lpMarkerS,
-        markeredgecolor=lpMarkerEC, markeredgewidth=lpMarkerEW, lw=lpLw, ls=lpLs)#, dashes=(0.75, 0.75))
+        markeredgecolor=lpMarkerEC, markeredgewidth=lpMarkerEW, lw=lpLw, ls=lpLs, zorder=3)#, dashes=(0.75, 0.75))
 ax1.set_xlabel('')
 ax1.set_ylabel("Response Time [in ms]")
 ax2 = plt.subplot2grid((6, 1), (5, 0), rowspan=1, colspan=1, sharex=ax1)
@@ -124,9 +126,9 @@ dataTarLocGradER.accuracy = (1-dataTarLocGradER.accuracy)*100  # make accuracy e
 fig2 = plt.figure(figsize=(4.5, 6), dpi=100)
 ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan=5, colspan=1)
 sns.violinplot(x='TarDistanceFromColor', y='responseTime', data=dataTarLocGrad, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLocGrad)
-sns.swarmplot(x="TarDistanceFromColor", y="responseTime", data=dataTarLocGrad, color=swaCol, alpha=swaAlp)
+sns.swarmplot(x="TarDistanceFromColor", y="responseTime", data=dataTarLocGrad, color=swaCol, alpha=swaAlp, linewidth=swaLwE, edgecolor=swaColE)
 ax1.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], color=lpColor, marker=lpMarker, markersize=lpMarkerS,
-        markeredgecolor=lpMarkerEC, markeredgewidth=lpMarkerEW, lw=lpLw, ls=lpLs)#, dashes=(0.75, 0.75))
+        markeredgecolor=lpMarkerEC, markeredgewidth=lpMarkerEW, lw=lpLw, ls=lpLs, zorder=3)#, dashes=(0.75, 0.75))
 ax1.set_xlabel('')
 ax1.set_ylabel("Response Time [in ms]")
 ax2 = plt.subplot2grid((6, 1), (5, 0), rowspan=1, colspan=1, sharex=ax1)
@@ -166,9 +168,9 @@ dataDisLocER.accuracy = (1-dataDisLocER.accuracy)*100  # make accuracy error rat
 fig3 = plt.figure(figsize=(3.25, 6), dpi=100)
 ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan=5, colspan=1)
 sns.violinplot(x='probabilityCorrection_short', y='responseTime', data=dataDisLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pDisLoc)
-sns.swarmplot(x="probabilityCorrection_short", y="responseTime", data=dataDisLoc, color=swaCol, alpha=swaAlp)
+sns.swarmplot(x="probabilityCorrection_short", y="responseTime", data=dataDisLoc, color=swaCol, alpha=swaAlp, linewidth=swaLwE, edgecolor=swaColE)
 ax1.plot(range(len(means)), [means[0], means[1], means[2]], color=lpColor, marker=lpMarker, markersize=lpMarkerS,
-        markeredgecolor=lpMarkerEC, markeredgewidth=lpMarkerEW, lw=lpLw, ls=lpLs)#, dashes=(0.75, 0.75))
+        markeredgecolor=lpMarkerEC, markeredgewidth=lpMarkerEW, lw=lpLw, ls=lpLs, zorder=3)#, dashes=(0.75, 0.75))
 ax1.set_xlabel('')
 ax1.set_ylabel("Response Time [in ms]")
 ax2 = plt.subplot2grid((6, 1), (5, 0), rowspan=1, colspan=1, sharex=ax1)
@@ -208,9 +210,9 @@ dataDisLocGradER.accuracy = (1-dataDisLocGradER.accuracy)*100  # make accuracy e
 fig4 = plt.figure(figsize=(4.5, 6), dpi=100)
 ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan=5, colspan=1)
 sns.violinplot(x='DisDistance', y='responseTime', data=dataDisLocGrad, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pDisLocGrad)
-sns.swarmplot(x="DisDistance", y="responseTime", data=dataDisLocGrad, color=swaCol, alpha=swaAlp)
+sns.swarmplot(x="DisDistance", y="responseTime", data=dataDisLocGrad, color=swaCol, alpha=swaAlp, linewidth=swaLwE, edgecolor=swaColE)
 ax1.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], color=lpColor, marker=lpMarker, markersize=lpMarkerS,
-        markeredgecolor=lpMarkerEC, markeredgewidth=lpMarkerEW, lw=lpLw, ls=lpLs)#, dashes=(0.75, 0.75))
+        markeredgecolor=lpMarkerEC, markeredgewidth=lpMarkerEW, lw=lpLw, ls=lpLs, zorder=3)#, dashes=(0.75, 0.75))
 ax1.set_xlabel('')
 ax1.set_ylabel("Response Time [in ms]")
 ax2 = plt.subplot2grid((6, 1), (5, 0), rowspan=1, colspan=1, sharex=ax1)
