@@ -17,11 +17,13 @@ if not os.path.exists(analysisFolder):
 dataFile = '/Data/finalAnalysis/SpatProbExp2_final.xlsx'
 data = pd.read_excel(projectFolder+dataFile, sheet_name=0)
 
-# Styles & color paletts
+# Styles & color paletts & other parameters
+# Params
+ci = 95  # for SD = sd, for SEM = 68, for standard ci = 95
 # Styles
 vioLw = 3
 vioSat = .25
-vioCut = 0
+vioCut = 0.25
 swaCol = (1, 1, 1)
 swaAlp = .5
 lpColor = (.85, 0, 0)
@@ -84,13 +86,13 @@ sns.swarmplot(x="cond_tarLocation", y="responseTime", data=dataTarLoc, color=swa
 ax1.plot(range(len(means)), [means[0], means[1], means[2]], color=lpColor, marker=lpMarker, markersize=lpMarkerS,
         markeredgecolor=lpMarkerEC, markeredgewidth=lpMarkerEW, lw=lpLw, ls=lpLs)#, dashes=(0.75, 0.75))
 ax1.set_xlabel('')
-ax1.set_ylabel("Response Time [ms]")
+ax1.set_ylabel("Response Time [in ms]")
 ax2 = plt.subplot2grid((6, 1), (5, 0), rowspan=1, colspan=1, sharex=ax1)
-sns.pointplot(x='cond_tarLocation', y='accuracy', data=dataTarLocER, color=lpColor, markers=lpMarker, ci=68)
+sns.pointplot(x='cond_tarLocation', y='accuracy', data=dataTarLocER, color=lpColor, markers=lpMarker, ci=ci)
 ax2.axes.get_xaxis().set_visible(False)
 ax2.axes.get_xaxis().set_ticks([])
 ax2.yaxis.set_ticks(np.arange(3, 11, 2))
-plt.ylabel('Error Rate')
+plt.ylabel('Error Rate\n [in %]')
 sns.despine(offset=10, trim=True)
 plt.show()
 
@@ -126,13 +128,13 @@ sns.swarmplot(x="TarDistanceFromColor", y="responseTime", data=dataTarLocGrad, c
 ax1.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], color=lpColor, marker=lpMarker, markersize=lpMarkerS,
         markeredgecolor=lpMarkerEC, markeredgewidth=lpMarkerEW, lw=lpLw, ls=lpLs)#, dashes=(0.75, 0.75))
 ax1.set_xlabel('')
-ax1.set_ylabel("Response Time [ms]")
+ax1.set_ylabel("Response Time [in ms]")
 ax2 = plt.subplot2grid((6, 1), (5, 0), rowspan=1, colspan=1, sharex=ax1)
-sns.pointplot(x='TarDistanceFromColor', y='accuracy', data=dataTarLocGradER, color=lpColor, markers=lpMarker, ci=68)
+sns.pointplot(x='TarDistanceFromColor', y='accuracy', data=dataTarLocGradER, color=lpColor, markers=lpMarker, ci=ci)
 ax2.axes.get_xaxis().set_visible(False)
 ax2.axes.get_xaxis().set_ticks([])
 ax2.yaxis.set_ticks(np.arange(3, 11, 2))
-plt.ylabel('Error Rate')
+plt.ylabel('Error Rate\n [in %]')
 sns.despine(offset=10, trim=True)
 plt.show()
 
@@ -168,13 +170,13 @@ sns.swarmplot(x="probabilityCorrection_short", y="responseTime", data=dataDisLoc
 ax1.plot(range(len(means)), [means[0], means[1], means[2]], color=lpColor, marker=lpMarker, markersize=lpMarkerS,
         markeredgecolor=lpMarkerEC, markeredgewidth=lpMarkerEW, lw=lpLw, ls=lpLs)#, dashes=(0.75, 0.75))
 ax1.set_xlabel('')
-ax1.set_ylabel("Response Time [ms]")
+ax1.set_ylabel("Response Time [in ms]")
 ax2 = plt.subplot2grid((6, 1), (5, 0), rowspan=1, colspan=1, sharex=ax1)
-sns.pointplot(x='probabilityCorrection_short', y='accuracy', data=dataDisLocER, color=lpColor, markers=lpMarker, ci=68)
+sns.pointplot(x='probabilityCorrection_short', y='accuracy', data=dataDisLocER, color=lpColor, markers=lpMarker, ci=ci)
 ax2.axes.get_xaxis().set_visible(False)
 ax2.axes.get_xaxis().set_ticks([])
 ax2.yaxis.set_ticks(np.arange(4, 10, 2))
-plt.ylabel('Error Rate')
+plt.ylabel('Error Rate\n [in %]')
 sns.despine(offset=10, trim=True)
 plt.show()
 
@@ -210,13 +212,13 @@ sns.swarmplot(x="DisDistance", y="responseTime", data=dataDisLocGrad, color=swaC
 ax1.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], color=lpColor, marker=lpMarker, markersize=lpMarkerS,
         markeredgecolor=lpMarkerEC, markeredgewidth=lpMarkerEW, lw=lpLw, ls=lpLs)#, dashes=(0.75, 0.75))
 ax1.set_xlabel('')
-ax1.set_ylabel("Response Time [ms]")
+ax1.set_ylabel("Response Time [in ms]")
 ax2 = plt.subplot2grid((6, 1), (5, 0), rowspan=1, colspan=1, sharex=ax1)
-sns.pointplot(x='DisDistance', y='accuracy', data=dataDisLocGradER, color=lpColor, markers=lpMarker, ci=68)
+sns.pointplot(x='DisDistance', y='accuracy', data=dataDisLocGradER, color=lpColor, markers=lpMarker, ci=ci)
 ax2.axes.get_xaxis().set_visible(False)
 ax2.axes.get_xaxis().set_ticks([])
 ax2.yaxis.set_ticks(np.arange(4, 10, 2))
-plt.ylabel('Error Rate')
+plt.ylabel('Error Rate\n [in %]')
 sns.despine(offset=10, trim=True)
 plt.show()
 
