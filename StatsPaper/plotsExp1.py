@@ -18,13 +18,19 @@ dataFile = '/Data/finalAnalysis/SpatProbExp1_final.xlsx'
 data = pd.read_excel(projectFolder+dataFile, sheet_name=0)
 
 # Styles & color paletts
-
 # Styles
 vioLw = 3
 vioSat = .25
 vioCut = 0
 swaCol = (1, 1, 1)
 swaAlp = .5
+lpColor = (.85, 0, 0)
+lpMarker = 's'
+lpMarkerS = 7
+lpMarkerC = (0, 0, 0)
+lpMarkerW = 1.5
+lpLw = 3
+lpLs = '-'
 # Color palletts
 # Standard matplotlib colors
 #1f77b4 blue
@@ -45,7 +51,7 @@ pDisLocGrad = {"Dis-0": "#1f77b4", "Dis-1": "#2ca02c", "Dis-2": "#d62728", "Dis-
 
 ### Figure 1
 
-# Data selection
+# Data selection: RT
 dataTarLoc = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0) & (data.correct == 1)],
                             values='responseTime', index='subject_nr', columns='cond_tarLocation')
 # dataDisLoc = pd.melt(dataDisLoc)  #if columns is a list (i.e. for e.g. 2 x 2 ANOVAs)
@@ -55,45 +61,42 @@ dataTarLoc = pd.melt(
     var_name='cond_tarLocation',
     value_vars=['highProbColor1', 'highProbColor2', 'lowProb'],
     value_name='responseTime')
-
+# Data selection: ER
+dataTarLocER = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0)],
+                            values='correct', index='subject_nr', columns='cond_tarLocation')
+dataTarLocER = pd.melt(
+    dataTarLocER.reset_index(),
+    id_vars='subject_nr',
+    var_name='cond_tarLocation',
+    value_vars=['highProbColor1', 'highProbColor2', 'lowProb'],
+    value_name='accuracy')
 # Descriptives
 means = dataTarLoc.groupby(['cond_tarLocation'])['responseTime'].mean().values
+dataTarLocER.accuracy = (1-dataTarLocER.accuracy)*100  # make accuracy error rate
 #mobs = dataTarLoc['cond_tarLocation'].value_counts().values
 #pos = range(len(mobs))
 
 # Plotting
-#fig1, (ax) = plt.subplots(1, 1, figsize=(4, 6), dpi=100)
 fig1 = plt.figure(figsize=(4, 6), dpi=100)
-
-ax1 = plt.subplot2grid((6,1), (0,0), rowspan=5, colspan=1)
+ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan=5, colspan=1)
 sns.violinplot(x='cond_tarLocation', y='responseTime', data=dataTarLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLoc)
 sns.swarmplot(x="cond_tarLocation", y="responseTime", data=dataTarLoc, color=swaCol, alpha=swaAlp)
-ax1.plot([0, 1, 2], [means[0], means[1], means[2]], color=(.85, 0, 0), marker='s', markersize=7,
-        markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
-#ax1.set_xlabel("Target Location")
+ax1.plot(range(len(means)), [means[0], means[1], means[2]], color=lpColor, marker=lpMarker, markersize=lpMarkerS,
+        markeredgecolor=lpMarkerC, markeredgewidth=lpMarkerW, lw=lpLw, ls=lpLs)#, dashes=(0.75, 0.75))
 ax1.set_xlabel('')
 ax1.set_ylabel("Response Time [ms]")
-#ax1.axes.get_xaxis().set_ticks([])
-ax1.axes.get_xaxis().set_visible(False)
-#ax2 = plt.axes([0, 0, 1, 0.1])
-#ax2 = sns.violinplot(x='cond_tarLocation', y='responseTime', data=dataTarLoc, cut=0, saturation=.2, palette=pTarLoc)
-# Each condition in violin plot corresponds to 1 px, so use floats because scaling is all messed up.
-#for tick, label in zip(pos, ax.get_xticklabels()):
-    #ax.plot([pos[tick]-0.1, pos[tick]+0.1], [means[tick], means[tick]], color='red', alpha=.75, linewidth=3)  #linestyle='dashed', dashes=(0.75, 0.75))
-ax2 = plt.subplot2grid((6,1), (5,0), rowspan=1, colspan=1)
-values = np.cumsum(np.random.randn(1000, 1))
-plt.plot(values)
-ax2.set_xlabel("Target Location")
-ax2.yaxis.tick_left()
-plt.rcParams['ytick.right'] = plt.rcParams['ytick.labelright'] = True
-plt.rcParams['ytick.left'] = plt.rcParams['ytick.labelleft'] = False
-#ax2.yaxis.set_label_position("right")
+ax2 = plt.subplot2grid((6, 1), (5, 0), rowspan=1, colspan=1, sharex=ax1)
+sns.pointplot(x='cond_tarLocation', y='accuracy', data=dataTarLocER, color=lpColor, markers=lpMarker, ci=68)
+ax2.axes.get_xaxis().set_visible(False)
+ax2.axes.get_xaxis().set_ticks([])
+ax2.yaxis.set_ticks(np.arange(4, 12, 2))
 h = plt.ylabel('Error Rate')
-#h.set_rotation(270)
 sns.despine(offset=10, trim=True)
 plt.show()
 
-### Figure 2
+###  Figure 2
+
+# Data selection: RT
 dataTarLocGrad = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0) & (data.correct == 1)],
                                 values='responseTime', index='subject_nr', columns='TarDistanceFromColor1')
 dataTarLocGrad = pd.melt(
@@ -102,20 +105,40 @@ dataTarLocGrad = pd.melt(
     var_name='TarDistanceFromColor1',
     value_vars=['Dis-0', 'Dis-1', 'Dis-2', 'Dis-3', 'Dis-4'],
     value_name='responseTime')
-
+# Data selection: ER
+dataTarLocGradER = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0)],
+                            values='correct', index='subject_nr', columns='TarDistanceFromColor1')
+dataTarLocGradER = pd.melt(
+    dataTarLocGradER.reset_index(),
+    id_vars='subject_nr',
+    var_name='TarDistanceFromColor1',
+    value_vars=['Dis-0', 'Dis-1', 'Dis-2', 'Dis-3', 'Dis-4'],
+    value_name='accuracy')
 # Descriptives
 means = dataTarLocGrad.groupby(['TarDistanceFromColor1'])['responseTime'].mean().values
+dataTarLocGradER.accuracy = (1-dataTarLocGradER.accuracy)*100  # make accuracy error rate
 
 # Plotting
-fig2, (ax) = plt.subplots(1, 1, figsize=(6, 6), dpi=100)
+fig2 = plt.figure(figsize=(6, 6), dpi=100)
+ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan=5, colspan=1)
 sns.violinplot(x='TarDistanceFromColor1', y='responseTime', data=dataTarLocGrad, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLocGrad)
 sns.swarmplot(x="TarDistanceFromColor1", y="responseTime", data=dataTarLocGrad, color=swaCol, alpha=swaAlp)
-ax.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], color=(.85, 0, 0), marker='s', markersize=7,
-        markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
+ax1.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], color=lpColor, marker=lpMarker, markersize=lpMarkerS,
+        markeredgecolor=lpMarkerC, markeredgewidth=lpMarkerW, lw=lpLw, ls=lpLs)#, dashes=(0.75, 0.75))
+ax1.set_xlabel('')
+ax1.set_ylabel("Response Time [ms]")
+ax2 = plt.subplot2grid((6, 1), (5, 0), rowspan=1, colspan=1, sharex=ax1)
+sns.pointplot(x='TarDistanceFromColor1', y='accuracy', data=dataTarLocGradER, color=lpColor, markers=lpMarker, ci=68)
+ax2.axes.get_xaxis().set_visible(False)
+ax2.axes.get_xaxis().set_ticks([])
+ax2.yaxis.set_ticks(np.arange(4, 12, 2))
+h = plt.ylabel('Error Rate')
 sns.despine(offset=10, trim=True)
 plt.show()
 
 ### Figure 3
+
+# Data selection: RT
 dataDisLoc = pd.pivot_table(data[(data.cond_disPresent == 'present') & (data.RTquicker200 == 0) & (data.correct == 1)],
                                 values='responseTime', index='subject_nr', columns=['cond_disLocation'])
 dataDisLoc = pd.melt(
@@ -124,18 +147,39 @@ dataDisLoc = pd.melt(
     var_name='cond_disLocation',
     value_vars=['highProb', 'highProbOther', 'lowProb'],
     value_name='responseTime')
+# Data selection: ER
+dataDisLocER = pd.pivot_table(data[(data.cond_disPresent == 'present') & (data.RTquicker200 == 0)],
+                            values='correct', index='subject_nr', columns='cond_disLocation')
+dataDisLocER = pd.melt(
+    dataDisLocER.reset_index(),
+    id_vars='subject_nr',
+    var_name='cond_disLocation',
+    value_vars=['highProb', 'highProbOther', 'lowProb'],
+    value_name='accuracy')
 # Descriptives
 means = dataDisLoc.groupby(['cond_disLocation'])['responseTime'].mean().values
+dataDisLocER.accuracy = (1-dataDisLocER.accuracy)*100  # make accuracy error rate
+
 # Plotting
-fig3, (ax) = plt.subplots(1, 1, figsize=(4, 6), dpi=100)
+fig3 = plt.figure(figsize=(4, 6), dpi=100)
+ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan=5, colspan=1)
 sns.violinplot(x='cond_disLocation', y='responseTime', data=dataDisLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pDisLoc)
 sns.swarmplot(x="cond_disLocation", y="responseTime", data=dataDisLoc, color=swaCol, alpha=swaAlp)
-ax.plot(range(len(means)), [means[0], means[1], means[2]], color=(.85, 0, 0), marker='s', markersize=7,
-        markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
+ax1.plot(range(len(means)), [means[0], means[1], means[2]], color=lpColor, marker=lpMarker, markersize=lpMarkerS,
+        markeredgecolor=lpMarkerC, markeredgewidth=lpMarkerW, lw=lpLw, ls=lpLs)#, dashes=(0.75, 0.75))
+ax1.set_xlabel('')
+ax1.set_ylabel("Response Time [ms]")
+ax2 = plt.subplot2grid((6, 1), (5, 0), rowspan=1, colspan=1, sharex=ax1)
+sns.pointplot(x='cond_disLocation', y='accuracy', data=dataDisLocER, color=lpColor, markers=lpMarker, ci=68)
+ax2.axes.get_xaxis().set_visible(False)
+ax2.axes.get_xaxis().set_ticks([])
+ax2.yaxis.set_ticks(np.arange(5, 13, 2))
+h = plt.ylabel('Error Rate')
 sns.despine(offset=10, trim=True)
 plt.show()
 
 ### Figure 4
+# Data selection: RT
 dataDisLocGrad = pd.pivot_table(data[(data.cond_disPresent == 'present') & (data.RTquicker200 == 0) & (data.correct == 1)],
                                 values='responseTime', index='subject_nr', columns=['DisDistance'])
 dataDisLocGrad = pd.melt(
@@ -144,20 +188,40 @@ dataDisLocGrad = pd.melt(
     var_name='DisDistance',
     value_vars=['Dis-0', 'Dis-1', 'Dis-2', 'Dis-3', 'Dis-4'],
     value_name='responseTime')
+# Data selection: ER
+dataDisLocGradER = pd.pivot_table(data[(data.cond_disPresent == 'present') & (data.RTquicker200 == 0)],
+                            values='correct', index='subject_nr', columns='DisDistance')
+dataDisLocGradER = pd.melt(
+    dataDisLocGradER.reset_index(),
+    id_vars='subject_nr',
+    var_name='DisDistance',
+    value_vars=['Dis-0', 'Dis-1', 'Dis-2', 'Dis-3', 'Dis-4'],
+    value_name='accuracy')
 # Descriptives
 means = dataDisLocGrad.groupby(['DisDistance'])['responseTime'].mean().values
+dataDisLocGradER.accuracy = (1-dataDisLocGradER.accuracy)*100  # make accuracy error rate
 
 # Plotting
-fig4, (ax) = plt.subplots(1, 1, figsize=(6, 6), dpi=100)
+fig4 = plt.figure(figsize=(6, 6), dpi=100)
+ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan=5, colspan=1)
 sns.violinplot(x='DisDistance', y='responseTime', data=dataDisLocGrad, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pDisLocGrad)
 sns.swarmplot(x="DisDistance", y="responseTime", data=dataDisLocGrad, color=swaCol, alpha=swaAlp)
-ax.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], color=(.85, 0, 0), marker='s', markersize=7,
-        markeredgecolor=(0, 0, 0), markeredgewidth=1.5, linewidth=3, linestyle='dashed', dashes=(0.75, 0.75))
+ax1.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], color=lpColor, marker=lpMarker, markersize=lpMarkerS,
+        markeredgecolor=lpMarkerC, markeredgewidth=lpMarkerW, lw=lpLw, ls=lpLs)#, dashes=(0.75, 0.75))
+ax1.set_xlabel('')
+ax1.set_ylabel("Response Time [ms]")
+ax2 = plt.subplot2grid((6, 1), (5, 0), rowspan=1, colspan=1, sharex=ax1)
+sns.pointplot(x='DisDistance', y='accuracy', data=dataDisLocGradER, color=lpColor, markers=lpMarker, ci=68)
+ax2.axes.get_xaxis().set_visible(False)
+ax2.axes.get_xaxis().set_ticks([])
+ax2.yaxis.set_ticks(np.arange(5, 13, 2))
+h = plt.ylabel('Error Rate')
 sns.despine(offset=10, trim=True)
 plt.show()
 
 # Save
-fig1.savefig(analysisFolder+'figure1.svg', bbox_inches='tight')
-fig2.savefig(analysisFolder+'figure2.svg', bbox_inches='tight')
-fig3.savefig(analysisFolder+'figure3.svg', bbox_inches='tight')
-fig4.savefig(analysisFolder+'figure4.svg', bbox_inches='tight')
+
+# fig1.savefig(analysisFolder+'figure1.svg', bbox_inches='tight')
+# fig2.savefig(analysisFolder+'figure2.svg', bbox_inches='tight')
+# fig3.savefig(analysisFolder+'figure3.svg', bbox_inches='tight')
+# fig4.savefig(analysisFolder+'figure4.svg', bbox_inches='tight')
