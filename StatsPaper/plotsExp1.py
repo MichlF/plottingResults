@@ -19,7 +19,7 @@ data = pd.read_excel(projectFolder+dataFile, sheet_name=0)
 
 # Styles & color paletts & other parameters
 # Params
-ci = 95  # for SD = sd, for SEM = 68, for standard ci = 95
+ci = 95  # for SD = sd, for SEM = 68, for 95% ci = 95
 # Styles
 vioLw = 3
 vioSat = .5
@@ -224,7 +224,7 @@ plt.ylabel('Error Rate\n [in %]')
 sns.despine(offset=10, trim=True)
 plt.show()
 
-# Save
+### Save ###
 
 fig1.savefig(analysisFolder+'figure1.svg', bbox_inches='tight')
 fig2.savefig(analysisFolder+'figure2.svg', bbox_inches='tight')
