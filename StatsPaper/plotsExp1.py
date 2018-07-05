@@ -23,8 +23,8 @@ ci = 95  # for SD = sd, for SEM = 68, for 95% ci = 95
 # Styles
 vioLw = 3
 vioSat = .5
-vioCut = 0
-swaCol = (.5, .5, .5)
+vioCut = 0.25
+swaCol = (.7, .7, .7)
 swaColE = (0, 0, 0)
 swaLwE = .5
 swaAlp = 1
@@ -81,7 +81,7 @@ dataTarLocER.accuracy = (1-dataTarLocER.accuracy)*100  # make accuracy error rat
 #pos = range(len(mobs))
 
 # Plotting
-fig1 = plt.figure(figsize=(3.25, 6), dpi=100)
+fig1 = plt.figure(figsize=(4.75, 6), dpi=100)
 ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan=5, colspan=1)
 sns.violinplot(x='cond_tarLocation', y='responseTime', data=dataTarLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLoc)
 sns.swarmplot(x="cond_tarLocation", y="responseTime", data=dataTarLoc, color=swaCol, alpha=swaAlp, linewidth=swaLwE, edgecolor=swaColE)
@@ -123,7 +123,7 @@ means = dataTarLocGrad.groupby(['TarDistanceFromColor1'])['responseTime'].mean()
 dataTarLocGradER.accuracy = (1-dataTarLocGradER.accuracy)*100  # make accuracy error rate
 
 # Plotting
-fig2 = plt.figure(figsize=(4.5, 6), dpi=100)
+fig2 = plt.figure(figsize=(5.75, 6), dpi=100)
 ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan=5, colspan=1)
 sns.violinplot(x='TarDistanceFromColor1', y='responseTime', data=dataTarLocGrad, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLocGrad)
 sns.swarmplot(x="TarDistanceFromColor1", y="responseTime", data=dataTarLocGrad, color=swaCol, alpha=swaAlp, linewidth=swaLwE, edgecolor=swaColE)
@@ -165,7 +165,7 @@ means = dataDisLoc.groupby(['cond_disLocation'])['responseTime'].mean().values
 dataDisLocER.accuracy = (1-dataDisLocER.accuracy)*100  # make accuracy error rate
 
 # Plotting
-fig3 = plt.figure(figsize=(3.25, 6), dpi=100)
+fig3 = plt.figure(figsize=(4.75, 6), dpi=100)
 ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan=5, colspan=1)
 sns.violinplot(x='cond_disLocation', y='responseTime', data=dataDisLoc, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pDisLoc)
 sns.swarmplot(x="cond_disLocation", y="responseTime", data=dataDisLoc, color=swaCol, alpha=swaAlp, linewidth=swaLwE, edgecolor=swaColE)
@@ -207,7 +207,7 @@ means = dataDisLocGrad.groupby(['DisDistance'])['responseTime'].mean().values
 dataDisLocGradER.accuracy = (1-dataDisLocGradER.accuracy)*100  # make accuracy error rate
 
 # Plotting
-fig4 = plt.figure(figsize=(4.5, 6), dpi=100)
+fig4 = plt.figure(figsize=(5.75, 6), dpi=100)
 ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan=5, colspan=1)
 sns.violinplot(x='DisDistance', y='responseTime', data=dataDisLocGrad, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pDisLocGrad)
 sns.swarmplot(x="DisDistance", y="responseTime", data=dataDisLocGrad, color=swaCol, alpha=swaAlp, linewidth=swaLwE, edgecolor=swaColE)
