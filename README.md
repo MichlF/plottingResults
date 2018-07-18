@@ -1,1 +1,1 @@
-Couple of scripts to plot data from two experiments using seaborn and matplotlib.
+Couple of scripts to plot data of two experiments using seaborn and matplotlib.
