@@ -8,13 +8,13 @@ import numpy as np
 # Set paths and load experiment 1 data
 # Get Dropbox path irrespective of OS
 if platform.system() == "Windows":
-    projectFolder = 'F:/Dropbox/Work/Data/behavioral/attention/SpatialProb/IndividualPriorityMaps/Experiment4'
+    projectFolder = 'F:\Dropbox\Work\Data\Behavioral\Attention\StatisticalRegularities\Salience\Exp1'
 else:
-    projectFolder = '/Users/michlf/Dropbox/Work/Data/behavioral/attention/SpatialProb/IndividualPriorityMaps/Experiment4'
+    projectFolder = '/Users/michlf/Dropbox/Work/Data/Behavioral/Attention/StatisticalRegularities/Salience/Exp1'
 analysisFolder = projectFolder+'/figures/'
 if not os.path.exists(analysisFolder):
     os.makedirs(analysisFolder)
-dataFile = '/Data/finalAnalysis/SpatProbExp1_final.xlsx'
+dataFile = '/Beh/Analysis/AnalysisSAL1.xlsx'
 data = pd.read_excel(projectFolder+dataFile, sheet_name=0)
 
 # Styles & color paletts & other parameters
@@ -23,7 +23,7 @@ ci = 95  # for SD = sd, for SEM = 68, for 95% ci = 95
 # Styles
 vioLw = 3
 vioSat = .5
-vioCut = 0.25
+vioCut = .25
 swaCol = (.7, .7, .7)
 swaColE = (0, 0, 0)
 swaLwE = .5
@@ -56,7 +56,7 @@ pDisLocGrad = {"Dis-0": "#d62728", "Dis-1": "#eb9393", "Dis-2": "#ffffff", "Dis-
 ### Figure 1 ###
 
 # Data selection: RT
-dataTarLoc = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0) & (data.correct == 1)],
+dataTarLoc = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data['Search RT > 200'] == 1) & (data.correct == 1)],
                             values='responseTime', index='subject_nr', columns='cond_tarLocation')
 # dataDisLoc = pd.melt(dataDisLoc)  #if columns is a list (i.e. for e.g. 2 x 2 ANOVAs)
 dataTarLoc = pd.melt(
@@ -66,7 +66,7 @@ dataTarLoc = pd.melt(
     value_vars=['highProbColor1', 'highProbColor2', 'lowProb'],
     value_name='responseTime')
 # Data selection: ER
-dataTarLocER = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0)],
+dataTarLocER = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data['Search RT > 200'] == 1)],
                             values='correct', index='subject_nr', columns='cond_tarLocation')
 dataTarLocER = pd.melt(
     dataTarLocER.reset_index(),
@@ -100,50 +100,50 @@ plt.show()
 
 ###  Figure 2 ###
 
-# Data selection: RT
-dataTarLocGrad = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0) & (data.correct == 1)],
-                                values='responseTime', index='subject_nr', columns='TarDistanceFromColor1')
-dataTarLocGrad = pd.melt(
-    dataTarLocGrad.reset_index(),
-    id_vars='subject_nr',
-    var_name='TarDistanceFromColor1',
-    value_vars=['Dis-0', 'Dis-1', 'Dis-2', 'Dis-3', 'Dis-4'],
-    value_name='responseTime')
-# Data selection: ER
-dataTarLocGradER = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0)],
-                            values='correct', index='subject_nr', columns='TarDistanceFromColor1')
-dataTarLocGradER = pd.melt(
-    dataTarLocGradER.reset_index(),
-    id_vars='subject_nr',
-    var_name='TarDistanceFromColor1',
-    value_vars=['Dis-0', 'Dis-1', 'Dis-2', 'Dis-3', 'Dis-4'],
-    value_name='accuracy')
-# Descriptives
-means = dataTarLocGrad.groupby(['TarDistanceFromColor1'])['responseTime'].mean().values
-dataTarLocGradER.accuracy = (1-dataTarLocGradER.accuracy)*100  # make accuracy error rate
+# # Data selection: RT
+# dataTarLocGrad = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0) & (data.correct == 1)],
+#                                 values='responseTime', index='subject_nr', columns='TarDistanceFromColor1')
+# dataTarLocGrad = pd.melt(
+#     dataTarLocGrad.reset_index(),
+#     id_vars='subject_nr',
+#     var_name='TarDistanceFromColor1',
+#     value_vars=['Dis-0', 'Dis-1', 'Dis-2', 'Dis-3', 'Dis-4'],
+#     value_name='responseTime')
+# # Data selection: ER
+# dataTarLocGradER = pd.pivot_table(data[(data.cond_disPresent == 'absent') & (data.RTquicker200 == 0)],
+#                             values='correct', index='subject_nr', columns='TarDistanceFromColor1')
+# dataTarLocGradER = pd.melt(
+#     dataTarLocGradER.reset_index(),
+#     id_vars='subject_nr',
+#     var_name='TarDistanceFromColor1',
+#     value_vars=['Dis-0', 'Dis-1', 'Dis-2', 'Dis-3', 'Dis-4'],
+#     value_name='accuracy')
+# # Descriptives
+# means = dataTarLocGrad.groupby(['TarDistanceFromColor1'])['responseTime'].mean().values
+# dataTarLocGradER.accuracy = (1-dataTarLocGradER.accuracy)*100  # make accuracy error rate
 
-# Plotting
-fig2 = plt.figure(figsize=(5.75, 6), dpi=100)
-ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan=5, colspan=1)
-sns.violinplot(x='TarDistanceFromColor1', y='responseTime', data=dataTarLocGrad, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLocGrad)
-sns.swarmplot(x="TarDistanceFromColor1", y="responseTime", data=dataTarLocGrad, color=swaCol, alpha=swaAlp, linewidth=swaLwE, edgecolor=swaColE)
-ax1.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], color=lpColor, marker=lpMarker, markersize=lpMarkerS,
-        markeredgecolor=lpMarkerEC, markeredgewidth=lpMarkerEW, lw=lpLw, ls=lpLs, zorder=3)#, dashes=(0.75, 0.75))
-ax1.set_xlabel('')
-ax1.set_ylabel("Response Time [in ms]")
-ax2 = plt.subplot2grid((6, 1), (5, 0), rowspan=1, colspan=1, sharex=ax1)
-sns.pointplot(x='TarDistanceFromColor1', y='accuracy', data=dataTarLocGradER, color=lpColor, markers=lpMarker, ci=ci)
-ax2.axes.get_xaxis().set_visible(False)
-ax2.axes.get_xaxis().set_ticks([])
-ax2.yaxis.set_ticks(np.arange(4, 12, 2))
-plt.ylabel('Error Rate\n [in %]')
-sns.despine(offset=10, trim=True)
-plt.show()
+# # Plotting
+# fig2 = plt.figure(figsize=(5.75, 6), dpi=100)
+# ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan=5, colspan=1)
+# sns.violinplot(x='TarDistanceFromColor1', y='responseTime', data=dataTarLocGrad, cut=vioCut, saturation=vioSat, linewidth=vioLw, palette=pTarLocGrad)
+# sns.swarmplot(x="TarDistanceFromColor1", y="responseTime", data=dataTarLocGrad, color=swaCol, alpha=swaAlp, linewidth=swaLwE, edgecolor=swaColE)
+# ax1.plot(range(len(means)), [means[0], means[1], means[2], means[3], means[4]], color=lpColor, marker=lpMarker, markersize=lpMarkerS,
+#         markeredgecolor=lpMarkerEC, markeredgewidth=lpMarkerEW, lw=lpLw, ls=lpLs, zorder=3)#, dashes=(0.75, 0.75))
+# ax1.set_xlabel('')
+# ax1.set_ylabel("Response Time [in ms]")
+# ax2 = plt.subplot2grid((6, 1), (5, 0), rowspan=1, colspan=1, sharex=ax1)
+# sns.pointplot(x='TarDistanceFromColor1', y='accuracy', data=dataTarLocGradER, color=lpColor, markers=lpMarker, ci=ci)
+# ax2.axes.get_xaxis().set_visible(False)
+# ax2.axes.get_xaxis().set_ticks([])
+# ax2.yaxis.set_ticks(np.arange(4, 12, 2))
+# plt.ylabel('Error Rate\n [in %]')
+# sns.despine(offset=10, trim=True)
+# plt.show()
 
 ### Figure 3 ###
 
 # Data selection: RT
-dataDisLoc = pd.pivot_table(data[(data.cond_disPresent == 'present') & (data.RTquicker200 == 0) & (data.correct == 1)],
+dataDisLoc = pd.pivot_table(data[(data.cond_disPresent == 'present') & (data['Search RT > 200'] == 1) & (data.correct == 1)],
                                 values='responseTime', index='subject_nr', columns=['cond_disLocation'])
 dataDisLoc = pd.melt(
     dataDisLoc.reset_index(),
@@ -152,7 +152,7 @@ dataDisLoc = pd.melt(
     value_vars=['highProb', 'highProbOther', 'lowProb'],
     value_name='responseTime')
 # Data selection: ER
-dataDisLocER = pd.pivot_table(data[(data.cond_disPresent == 'present') & (data.RTquicker200 == 0)],
+dataDisLocER = pd.pivot_table(data[(data.cond_disPresent == 'present') & (data['Search RT > 200'] == 1)],
                             values='correct', index='subject_nr', columns='cond_disLocation')
 dataDisLocER = pd.melt(
     dataDisLocER.reset_index(),
@@ -185,7 +185,7 @@ plt.show()
 ### Figure 4 ###
 
 # Data selection: RT
-dataDisLocGrad = pd.pivot_table(data[(data.cond_disPresent == 'present') & (data.RTquicker200 == 0) & (data.correct == 1)],
+dataDisLocGrad = pd.pivot_table(data[(data.cond_disPresent == 'present') & (data['Search RT > 200'] == 1) & (data.correct == 1)],
                                 values='responseTime', index='subject_nr', columns=['DisDistance'])
 dataDisLocGrad = pd.melt(
     dataDisLocGrad.reset_index(),
@@ -194,7 +194,7 @@ dataDisLocGrad = pd.melt(
     value_vars=['Dis-0', 'Dis-1', 'Dis-2', 'Dis-3', 'Dis-4'],
     value_name='responseTime')
 # Data selection: ER
-dataDisLocGradER = pd.pivot_table(data[(data.cond_disPresent == 'present') & (data.RTquicker200 == 0)],
+dataDisLocGradER = pd.pivot_table(data[(data.cond_disPresent == 'present') & (data['Search RT > 200'] == 1)],
                             values='correct', index='subject_nr', columns='DisDistance')
 dataDisLocGradER = pd.melt(
     dataDisLocGradER.reset_index(),
@@ -227,6 +227,6 @@ plt.show()
 ### Save ###
 
 fig1.savefig(analysisFolder+'figure1.svg', bbox_inches='tight')
-fig2.savefig(analysisFolder+'figure2.svg', bbox_inches='tight')
+#fig2.savefig(analysisFolder+'figure2.svg', bbox_inches='tight')
 fig3.savefig(analysisFolder+'figure3.svg', bbox_inches='tight')
 fig4.savefig(analysisFolder+'figure4.svg', bbox_inches='tight')
