@@ -224,7 +224,7 @@ plt.ylabel('Error Rate\n [in %]')
 sns.despine(offset=10, trim=True)
 plt.show()
 
-### Save ###
+### Save figures ###
 
 fig1.savefig(analysisFolder+'figure1.svg', bbox_inches='tight')
 fig2.savefig(analysisFolder+'figure2.svg', bbox_inches='tight')
